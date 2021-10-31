@@ -27,7 +27,7 @@ def main(file, rand_number, start):
     sys.stdout.write("\n")
     maze = ascii_map()
     sys.stdout.write("\n")
-    last = [4,1] #EEEEEEEEEEEEEEEEEEEEZ függ attól, hogy honnan indul az autó, ez az azzal ellentétes irányt jelöli!
+    last = [4,1] #EEEEEEEEEEEEEEEEEEEEZ függ attól, hogy honnan indul az autó, ez az azzal ellentétes irányt jelöli! 
     #set_weighted(st, end)
     print(maze)
     for k in range(rand_number):
