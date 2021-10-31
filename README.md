@@ -9,5 +9,7 @@ As in this project we are utilizing a simulation environment, the following task
 - *Initializing the docker environment*. This functions as the base of the headless running of the Duckietown simulation. The task was done by pulling the pre-built docker image after installing nvidia-docker.
 - *Setting up the Duckietown-gym*. 
 - *Creating a unique map*. The output.yaml file contains the data for our uniquely generated map. This was achieved by the map utilities (https://github.com/duckietown/map-utils/blob/master/README.md) provided by Duckietown.
-- *Creating a path-finder* The previously mentioned link contains a pathfinder.py as well in which we implemented an A* searching algorithm to find the shortest path between two different points of the map. The path is later used in a lane following agent.
-- 
+- *Finding the shortest path between two positions* The previously mentioned link contains a pathfinder.py as well in which we implemented an A* searching algorithm to find the shortest path between two different points of the map. The path is later used in a lane following agent.
+- *Writing a code for path-following* We have changed the code in *manual_control.py* as it follows a straight line the Duckiebot will maintain a certain speed and when it approaches a curve, the speed will decrease and a rotate in a specific angle.
+- *Recording a run in the simulation* From the output of the path finder a run was recorded. 
+These tasks mentioned above have been done and submitted by October 31st of 2021.
