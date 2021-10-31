@@ -9,4 +9,5 @@ As in this project we are utilizing a simulation environment, the following task
 - *Initializing the docker environment*. This functions as the base of the headless running of the Duckietown simulation. The task was done by pulling the pre-built docker image after installing nvidia-docker.
 - *Setting up the Duckietown-gym*. 
 - *Creating a unique map*. The output.yaml file contains the data for our uniquely generated map. This was achieved by the map utilities (https://github.com/duckietown/map-utils/blob/master/README.md) provided by Duckietown.
-- *Creating a path-finder* The previously mentioned link contains a pathfinder.py as well in which we implemented an A* searching algorithm to find the shortest path between two different points of the map. The path is later 
+- *Creating a path-finder* The previously mentioned link contains a pathfinder.py as well in which we implemented an A* searching algorithm to find the shortest path between two different points of the map. The path is later used in a lane following agent.
+- 
