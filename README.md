@@ -1,2 +1,7 @@
-# Deep-Learning-Homework-Duckietown
-This is the github repo for our Deep Learning homework in which we created a Duckietown based project.
+# Deep Learning Homework - Duckietown
+This is the repo for our group: "K épület". The members of our team:
+- Endrész Balázs
+- Monori János Bence
+- Wenesz Dominik
+
+# First milestone:
