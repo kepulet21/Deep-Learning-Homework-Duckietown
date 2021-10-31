@@ -13,4 +13,4 @@ As in this project we are utilizing a simulation environment, the following task
 - *Writing a code for path-following* We have changed the code in *manual_control.py* as it follows a straight line the Duckiebot will maintain a certain speed and when it approaches a curve, the speed will decrease and a rotate in a specific angle.
 - *Recording a run in the simulation* From the output of the path finder a run was recorded. 
 
-These tasks mentioned above have been done and submitted by October 31st of 2021.
+These tasks mentioned above have been done and have been submitted by October 31st of 2021.
