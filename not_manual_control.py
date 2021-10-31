@@ -27,7 +27,7 @@ parser.add_argument("--frame-skip", default=1, type=int, help="number of frames 
 parser.add_argument("--seed", default=1, type=int, help="seed")
 args = parser.parse_args()
 last_tile = [0,6]
-tiles = [[0, 7],  #pathfinder.py output
+tiles = [[0, 7],  #pathfinder.py outputs
     [1, 7],
     [2, 7],
     [2, 8],
