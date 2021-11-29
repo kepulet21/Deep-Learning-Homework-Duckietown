@@ -14,3 +14,7 @@ As in this project we are utilizing a simulation environment, the following task
 - *Recording a run in the simulation* From the output of the path finder a run was recorded. 
 
 These tasks mentioned above have been done and have been submitted by October 31st of 2021.
+
+# Second milestone:
+For this milestone we assembled the following method: *Taking screenshots from the environment* > *Preprocessing the image* & *Calculating a reward function* > *CNN Learning* > *Predicting the best action*. The following task have been done for the second milestone:
+- *Preprocessing*: 
