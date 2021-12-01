@@ -21,6 +21,6 @@ For this milestone we assembled the following method: *Taking screenshots from t
 - *CNN model*: We have implemented a 2D convolutional neural network as our main task was image processing. 
 - *Predicting the best action*: A Q-learning algorithm is attached after the CNN model, fundamentally speaking it predicts the best action (going straight, turning left orturning right) frame by frame. As the run ends (by hitting an object, leaving the map or reaching a step count of 1500) a reward function is calculated corresponding to the run
 
-For both learning and predicting the following file shall be used: *q.py*.
+For learning and predicting the following files shall be used: *q.py* and *pred.py*
 
  These tasks mentioned above have been done and have been submitted by December 2nd of 2021.
