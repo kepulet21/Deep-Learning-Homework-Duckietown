@@ -110,7 +110,7 @@ class Agent:
         #This is the actual Neural net
         
         model = Sequential([ 
-            Conv2D(32, kernel_size=(3,3), input_shape=(60,80,15,), activation='relu'), 
+            Conv2D(32, kernel_size=(3,3), input_shape=(60,80,3), activation='relu'), 
             MaxPooling2D(pool_size=(2,2)),
             Conv2D(32, kernel_size=(3,3), activation='relu'),
             MaxPooling2D(pool_size=(2,2)),
@@ -161,7 +161,7 @@ class Agent:
     def predict_(self, state):
         #sprint(np.shape(state))
         stateConv = state
-        stateConv = np.reshape(state, (-1,60,80,15))
+        stateConv = np.reshape(state, (-1,60,80,3))
         qval = self.model.predict(stateConv)
         return qval
 
@@ -175,22 +175,22 @@ class Agent:
         #1
         #print(np.shape(state))
         qval = self.predict_(state)
-        #action = np.argmax(qval)
+        action = np.argmax(qval)
         #you can either pick softmax or epislon greedy actions.
         #To pick Softmax, un comment the bottom 2 lines and delete everything below that 
         #prob = tf.nn.softmax(tf.math.divide((qval.flatten()), 1)) 
         #action = np.random.choice(range(3), p=np.array(prob))
-         
+        '''
         #Epsilon-Greedy actions->  TODO:itt mi a fasz na mind1 komment megnézem mi lesz
         z = np.random.random()
         epsilon = 0.004
         if self.location > 1000:
             epsilon = 0.05
-        epsilon = 0
+        #epsilon = 0
         if z > epsilon:
             return np.argmax(qval.flatten())
         else:
-            return np.random.choice(range(3))
+            return np.random.choice(range(3))'''
         return action
 
     # This function stores experiences in the experience replay
@@ -226,9 +226,9 @@ class Agent:
         nextStateToPredict = batch[:, 1].reshape(self.batchSize).tolist()
 
         statePrediction = self.model.predict(np.reshape(
-            stateToPredict, (self.batchSize, 60, 80,15)))
+            stateToPredict, (self.batchSize, 60, 80,3)))
         nextStatePrediction = self.model.predict(np.reshape(
-            nextStateToPredict, (self.batchSize, 60, 80,15)))
+            nextStateToPredict, (self.batchSize, 60, 80,3)))
         statePrediction = np.array(statePrediction)
         nextStatePrediction = np.array(nextStatePrediction)
 
@@ -244,7 +244,7 @@ class Agent:
                 statePrediction[i, action] += alpha * (reward + 0.95 * np.max(nextState) - qval)
 
         self.xTrain.append(np.reshape(
-           stateToPredict, (self.batchSize,60, 80,15)))
+           stateToPredict, (self.batchSize,60, 80,3)))
         self.yTrain.append(statePrediction)
         #print(type(self.yTrain))
         history = self.model.fit(
