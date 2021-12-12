@@ -24,3 +24,10 @@ For this milestone we assembled the following method: *Taking screenshots from t
 For learning and predicting the following files shall be used: *q.py* and *pred.py*
 
  These tasks mentioned above have been done and have been submitted by December 2nd of 2021.
+
+# Finishing the project
+Many bugfixes have been made with the reward function and the learning rate. The dockumentation is done, but the citations are missing.
+
+TODO: 
+- Make the video
+- Correct the citations
