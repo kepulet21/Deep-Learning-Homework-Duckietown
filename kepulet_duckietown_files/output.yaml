@@ -1,0 +1,147 @@
+tiles:
+- [grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass]
+- [grass,         asphalt,       asphalt,       asphalt,       curve_right/N, straight/W,    curve_left/N,  grass,         grass,         grass,         grass,         grass]
+- [grass,         asphalt,       asphalt,       asphalt,       straight/N,    asphalt,       curve_right/W, straight/W,    curve_left/N,  grass,         grass,         grass]
+- [grass,         asphalt,       asphalt,       curve_right/N, curve_left/E,  asphalt,       asphalt,       asphalt,       straight/N,    grass,         grass,         grass]
+- [grass,         curve_right/N, straight/W,    curve_left/E,  grass,         asphalt,       asphalt,       curve_right/N, curve_left/E,  grass,         grass,         grass]
+- [grass,         straight/N,    asphalt,       asphalt,       grass,         asphalt,       asphalt,       straight/N,    grass,         grass,         grass,         grass]
+- [grass,         straight/N,    asphalt,       asphalt,       grass,         asphalt,       asphalt,       straight/N,    grass,         grass,         grass,         grass]
+- [grass,         curve_right/W, straight/W,    curve_left/N,  grass,         asphalt,       asphalt,       curve_right/W, curve_left/N,  grass,         grass,         grass]
+- [grass,         asphalt,       asphalt,       curve_right/W, curve_left/N,  asphalt,       asphalt,       asphalt,       curve_right/W, curve_left/N,  grass,         grass]
+- [grass,         asphalt,       asphalt,       asphalt,       curve_right/W, straight/W,    straight/W,    curve_left/N,  asphalt,       straight/N,    grass,         grass]
+- [grass,         asphalt,       asphalt,       asphalt,       asphalt,       asphalt,       asphalt,       curve_right/W, straight/W,    curve_left/E,  grass,         grass]
+- [grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass,         grass]
+
+
+objects:
+
+- kind: sign_yield
+  pos: [10.06, 3.7800000000000002]
+  rotate: 61.21
+  height: 0.18
+
+- kind: sign_do_not_enter
+  pos: [7.64, 1.07]
+  rotate: 355.68
+  height: 0.18
+
+- kind: truck
+  pos: [5.73, 7.7]
+  rotate: 108.06
+  height: 0.2
+
+- kind: cone
+  pos: [5.55, 5.42]
+  rotate: 21.84
+  height: 0.08
+
+- kind: house
+  pos: [0.23, 1.85]
+  rotate: 90
+  height: 0.5
+
+- kind: truck
+  pos: [2.74, 1.9300000000000002]
+  rotate: 209.89
+  height: 0.2
+
+- kind: building
+  pos: [0.07, 3.26]
+  rotate: 0
+  height: 0.6
+
+- kind: sign_t_light_ahead
+  pos: [4.82, 4.41]
+  rotate: 174.71
+  height: 0.18
+
+- kind: duckiebot
+  pos: [2.6, 8.57]
+  rotate: 353.43
+  height: 0.1
+
+- kind: sign_pedestrian
+  pos: [11.55, 8.44]
+  rotate: 226.45
+  height: 0.18
+
+- kind: house
+  pos: [8.88, 1.21]
+  rotate: 270
+  height: 0.5
+
+- kind: house
+  pos: [11.4, 9.92]
+  rotate: 270
+  height: 0.5
+
+- kind: barrier
+  pos: [3.21, 2.11]
+  rotate: 81.84
+  height: 0.08
+
+- kind: tree
+  pos: [0.86, 10.44]
+  rotate: 319.18
+  height: 0.25
+
+- kind: building
+  pos: [10.4, 1.25]
+  rotate: 270
+  height: 0.6
+
+- kind: sign_t_light_ahead
+  pos: [6.57, 0.41]
+  rotate: 131.34
+  height: 0.18
+
+- kind: sign_pedestrian
+  pos: [3.07, 1.15]
+  rotate: 237.8
+  height: 0.18
+
+- kind: sign_yield
+  pos: [6.82, 7.53]
+  rotate: 233.64
+  height: 0.18
+
+- kind: bus
+  pos: [2.6, 1.05]
+  rotate: 54.86
+  height: 0.18
+
+- kind: barrier
+  pos: [6.34, 10.33]
+  rotate: 96.33
+  height: 0.08
+
+- kind: building
+  pos: [4.71, 11.12]
+  rotate: 270
+  height: 0.6
+
+- kind: sign_t_light_ahead
+  pos: [3, 8]
+  rotate: 180.0
+  height: 0.18
+
+- kind: sign_t_light_ahead
+  pos: [3.0, 7.0]
+  rotate: 0.0
+  height: 0.18
+
+- kind: sign_t_light_ahead
+  pos: [8, 10]
+  rotate: 270.0
+  height: 0.18
+
+- kind: sign_t_light_ahead
+  pos: [7.0, 10.0]
+  rotate: 90.0
+  height: 0.18
+
+- kind: duckie
+  pos: [11.73, 5.11]
+  rotate: 34.58
+  height: 0.0397
+
