@@ -2,8 +2,7 @@
 # manual
 
 """
-This script allows you to manually control the simulator or Duckiebot
-using the keyboard arrows.
+This script implements q learning.
 """
 from PIL import Image
 import argparse
@@ -68,48 +67,21 @@ def session(session_map):
     return env
 
 env = session("kmap1")
+
+#Reset the map, to make it work
 env.reset()
+#Render the picture of the map to spectate it..
 env.render()
-@env.unwrapped.window.event
-def on_key_press(symbol, modifiers):
-    """
-    This handler processes keyboard commands that
-    control the simulation
-    """
-
-    if symbol == key.BACKSPACE or symbol == key.SLASH:
-        print("RESET")
-        env.reset()
-        env.render()
-    elif symbol == key.PAGEUP:
-        env.unwrapped.cam_angle[0] = 0
-
-    elif symbol == key.RETURN:
-         print('saving screenshot')
-         img = env.render('rgb_array')
-         save_img('screenshot.png', img)
-    elif symbol == key.ESCAPE:
-         agent.model.save_weights ("DT.h5")
-         print( "Saved model to disk, and exit")
-         env.close()
-         sys.exit(0)
-
-# Register a keyboard handler
-key_handler = key.KeyStateHandler()
-env.unwrapped.window.push_handlers(key_handler)
-
-
 
 checkpointer=ModelCheckpoint(filepath='weights.hdf5', save_best_only=True, verbose=1)
-#reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.8, patience=20, min_lr=10e-5)
+reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.8, patience=20, min_lr=10e-5)
 
 
-
+#Make the agent, who will learn in the process
 class Agent:
     def __init__(self):
-        #This is the actual Neural net
-        
-        model = Sequential([ 
+        #This is the actual Neural network, whit 2DConv
+        model = Sequential([  
             Conv2D(32, kernel_size=(3,3), input_shape=(60,80,3), activation='relu'), 
             MaxPooling2D(pool_size=(2,2)),
             Conv2D(32, kernel_size=(3,3), activation='relu'),
@@ -119,79 +91,43 @@ class Agent:
             Flatten(),
             Dense(128, activation='relu'),
             Dense(3, activation='linear')
-            #Dense(3)
         ])
-        '''model = Sequential()
-        model.add(Conv2D(32, kernel_size =(3, 3), strides =(1, 1),
-                         activation ='relu', padding = "same", input_shape= (15,60,80,3)))
-        #model.add(MaxPooling2D(pool_size =(2, 2), strides =(2, 2)))
-        model.add(Conv2D(64, (3, 3), activation ='relu'))
-        #model.add(MaxPooling2D(pool_size =(2, 2)))
-        model.add(Flatten())
-        model.add(Dense(128, activation ='relu'))
-        model.add(Dense(3, activation ='softmax'))'''
-        '''model = Sequential() 
-        model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(60,80,3,15))) 
-        #model.add(MaxPooling2D(pool_size=(2, 2))) 
-        model.add(Conv2D(32, (3, 3), activation='relu')) 
-        #model.add(MaxPooling2D(pool_size=(2, 2))) 
-        model.add(Conv2D(64, (3, 3), activation='relu')) 
-        #model.add(MaxPooling2D(pool_size=(2, 2))) 
-        model.add(Dense(128, activation='softmax')) 
-        model.add(Dense(3, activation='softmax')) '''
         #pick your learning rate here
-        model.compile(loss='mse', optimizer='adam', metrics=[tf.keras.metrics.Accuracy()])#
-        #model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.0001)) 
-        #This is where you import your pretrained weights
+        model.compile(loss='mse', optimizer='adam', metrics=[tf.keras.metrics.Accuracy()])
+        #This is where load the pretrained weights
         try:
+            #load if it exists
             model.load_weights("DT.h5")
-            
         except:
+            #else pass that
             pass
         self.model = model
         self.memory = []
-        # Print the model summary if you want to see what it looks like
-        # print(self.model.summary()) 
+        # Print the model summary
+        print(self.model.summary()) 
         self.xTrain = []
         self.yTrain = []
         self.loss = []
         self.location = 0
 
-
+    #make prediction function. It will predict the next state of the network.
     def predict_(self, state):
-        #sprint(np.shape(state))
         stateConv = state
         stateConv = np.reshape(state, (-1,60,80,3))
         qval = self.model.predict(stateConv)
         return qval
 
-    def act(self, state): #TODO: TANULÁS SGÍTŐ CUCC+RETURN ACTION
-    # Halo pls kiprobalhatok kodot írni pls?  opci aha nyugodtan
-    # kszi!
-        #na tied
-        # Viheted, az enyém addig nem fog menni amíg nektek sem I realized.
-        #meg lesz ma mindjárt megvan ahiba oka lemegyek balázshoz társalgóba 
-        # melyik társalgó?
-        #1
-        #print(np.shape(state))
-        qval = self.predict_(state)
-        action = np.argmax(qval)
-        #you can either pick softmax or epislon greedy actions.
-        #To pick Softmax, un comment the bottom 2 lines and delete everything below that 
-        #prob = tf.nn.softmax(tf.math.divide((qval.flatten()), 1)) 
-        #action = np.random.choice(range(3), p=np.array(prob))
-        '''
-        #Epsilon-Greedy actions->  TODO:itt mi a fasz na mind1 komment megnézem mi lesz
+    def act(self, state): #predict the  action of the duckie, with the knowledge of the last state.
+        qval = self.predict_(state)        
+        #Epsilon-Greedy policy We have a possiblity to perform a random action instead of the best. So it is a semi-greedy algorithm with the chance to not make the action which seems to be the best
         z = np.random.random()
-        epsilon = 0.004
-        if self.location > 1000:
-            epsilon = 0.05
-        #epsilon = 0
-        if z > epsilon:
+        eps = 0.1
+        if self.location > 200:
+            epsilon = 0.2
+        if z > eps:
             return np.argmax(qval.flatten())
         else:
-            return np.random.choice(range(3))'''
-        return action
+            return np.random.choice(range(3))
 
     # This function stores experiences in the experience replay
     def remember(self, state, nextState, action, reward, done, location):
@@ -200,11 +136,9 @@ class Agent:
 
     #This is where the AI learns
     def learn(self):
-        #Feel free to tweak this. This number is the number of experiences the AI learns from every round
         self.batchSize = 256 
 
         #If you don't trim the memory, your GPU might run out of memory during training. 
-        #I found 35000 works well
         if len(self.memory) > 35000:
             self.memory = []
             print("trimming memory")
@@ -217,7 +151,7 @@ class Agent:
 
     #The alpha value determines how future oriented the AI is.
     #bigger number (up to 1) -> more future oriented
-    def learnBatch(self, batch, alpha=0.9):
+    def learnBatch(self, batch, alpha=0.065):
         batch = np.array(batch)
         actions = batch[:, 2].reshape(self.batchSize).tolist()
         rewards = batch[:, 3].reshape(self.batchSize).tolist()
@@ -237,34 +171,31 @@ class Agent:
             reward = rewards[i]
             nextState = nextStatePrediction[i]
             qval = statePrediction[i, action]
-            if reward < -5: 
+            if reward < -50: 
                 statePrediction[i, action] = reward
             else:
                 #this is the q learning update rule
                 statePrediction[i, action] += alpha * (reward + 0.95 * np.max(nextState) - qval)
-
+        
         self.xTrain.append(np.reshape(
            stateToPredict, (self.batchSize,60, 80,3)))
         self.yTrain.append(statePrediction)
-        #print(type(self.yTrain))
         history = self.model.fit(
-            self.xTrain, self.yTrain, batch_size=5, epochs=1, verbose=0, callbacks=[checkpointer])
+            self.xTrain, self.yTrain, batch_size=5, epochs=1, verbose=0, callbacks=[checkpointer, reduce_lr])
         loss = history.history.get("loss")[0]
         print("LOSS: ", loss)
         self.loss.append(loss)
         self.xTrain = []
         self.yTrain = []
 
-
-
-
 plotX = []
 n = 0
-while n < 200:
+#number of map swpas
+while n < 6:
     n+=1
-    agent = Agent() #currently agent is configured with only 2 actions  
-    #3500 refers to the number of episodes/iterations of the game to play
-    
+    #make the agent
+    agent = Agent()
+    #close the last map
     env.close()
     # Changing maps
     map_base = "kmap"
@@ -272,119 +203,69 @@ while n < 200:
     env=session(map_base + str(index))
     env.reset()
     env.render()
-    
-    for i in tqdm(range(41)):
+    #make one iteration in a map
+    skip = False
+    for i in tqdm(range(61)):
         env.reset()
+        #make a random prediction
         action = np.random.randint(0,3)
+        #use the result of it
         state, reward, done, info = env.step(action)
-        #cv2.imwrite('Screenshot2.png',state[:,:,12])
         epReward = 0
         done = False
         episodeTime = time.time()
         stepCounter = 0
         acts = ""
         while not done:
+            #make the real prediction
             action = agent.act(state)
-            #print('action',np.shape(action))
             acts += str(action) + ","
             nextState, reward, done, info = env.step(action)
             ########
             #This next section is storing more memory of later parts of the game since 
             #if you don't do this, most of the experience replay fills up with the 
-            #starting parts of the game since its played more often. A more elegant 
-            #approach to this is "Prioritized experience replay" but this is an effective
-            #alternative too
-            if stepCounter> 700:
+            #starting parts of the game since its played more often.
+            if stepCounter> 1000:
                 for _ in range(5):
                     agent.remember(state, nextState, action, reward, done, stepCounter)
-            elif stepCounter> 40:
+            elif stepCounter> 5:
                 agent.remember(state, nextState, action, reward, done, stepCounter)              
             if done == True: #game ended
                 for _ in range(10):
                     agent.remember(state, nextState, action, reward, done, stepCounter)
+                if env.unwrapped.step_count > 10:
+                    skip = True
                 print("breaking")
                 break
-            ########
+            
             state = nextState
             stepCounter += 1
             epReward += reward
             env.render()    
-        #print(acts)
+
         #post episode
-        if stepCounter != 0:
-            print("Avg Frame-Rate: ", 1/((time.time()-episodeTime)/stepCounter))
-        plotX.append(epReward)
-        print(epReward)
-        agent.learn()
-
-
-       
-        if i % 20 == 0:
-            agent.model.save_weights ("DT.h5")
-            print( "Saved model to disk")
+        if skip:
+            if stepCounter != 0:
+                print("Avg Frame-Rate: ", 1/((time.time()-episodeTime)/stepCounter))
+            plotX.append(epReward)
+            print(epReward)
+            agent.learn()
             
-        
+            if i % 20 == 0:
+                agent.model.save_weights ("DT.h5")
+                print( "Saved model to disk")
+            
        	env.render()
-         
+
+#plot the reward         
 plt.plot(range(len(plotX)),plotX) 
 plt.show()
+#plot the loss
 plt.plot(range(len(agent.loss)), agent.loss) 
 plt.show() 
 
-
-
 def update(dt):
-    """
-    This function is called at every frame to handle
-    movement/stepping and redrawing"""
-    """
-    
-    
-    wheel_distance = 0.102
-    min_rad = 0.08
-
-    if key_handler[key.UP]:
-        action += np.array([0.44, 0.0])
-    if key_handler[key.DOWN]:
-        action -= np.array([0.44, 0])
-    if key_handler[key.LEFT]:
-        action += np.array([0, 1])
-    if key_handler[key.RIGHT]:
-        action -= np.array([0, 1])
-    if key_handler[key.SPACE]:
-        action = np.array([0, 0])
-
-    v1 = action[0]
-    v2 = action[1]
-    # Limit radius of curvature
-    if v1 == 0 or abs(v2 / v1) > (min_rad + wheel_distance / 2.0) / (min_rad - wheel_distance / 2.0):
-        # adjust velocities evenly such that condition is fulfilled
-        delta_v = (v2 - v1) / 2 - wheel_distance / (4 * min_rad) * (v1 + v2)
-        v1 += delta_v
-        v2 -= delta_v
-
-    action[0] = v1
-    action[1] = v2
-
-    # Speed boost
-    if key_handler[key.LSHIFT]:
-        action *= 1.5
-    print(action)
-    obs, reward, done, info = env.step(action)
-    print("step_count = %s, reward=%.3f" % (env.unwrapped.step_count, reward))
-
-    #if key_handler[key.RETURN]:
-    im = Image.fromarray(obs)
-
-    im.save("screen.png")
-
-    if done:
-        print("done!")
-        env.reset()
-        env.render()
-"""
     env.render()
-
 
 pyglet.clock.schedule_interval(update, 1.0 / env.unwrapped.frame_rate)
 
