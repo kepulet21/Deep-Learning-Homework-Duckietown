@@ -10,11 +10,11 @@ To run the code the official gym-duckietown should be installed first (https://g
 - *q.py*, *pred.py*, *DT.h5* - in the gym-duckietown folder
 - *duckietown_env.py* - gym-duckietown > src > gym_duckietown > src
 After so the following command should start the learning:
-`cd gym-duckietown
-./q.py`
+- `cd gym-duckietown`
+- `./q.py`
 
 To watch the predictions the following command should be executed:
-> ```./pred.py```
+> v./pred.py
 
 # First milestone:
 As in this project we are utilizing a simulation environment, the following tasks have been done for the first milestone:
