@@ -68,7 +68,7 @@ In this semester our task was to create a self-driving AI and test it in  Duckie
 simulational environment. Reinforcement learning is widely used to problems in robotics,
 and control engineering, involving self-driving cars, decision processes, and control systems. 
 \par
-The Duckietown Project was initiated in 2016 as an MIT graduate project. It contains
+The Duckietown Project was initiated in 2016 as an MIT graduate project.\cite{gym_duckietown} It contains
 vehicles called Duckiebots which circulate around the town. In this project we can participate
 in a bunch of challenges such as lane following, passing through intersections or controling
 multiple Duckiebots at once. In this paper we will describe our methods on solving the
@@ -93,8 +93,10 @@ beating Google Chrome's built-in dinosaur game.  The algorithm converged rapidly
 with appropriate image pre-processing, hence it seemed good to implement in the 
 Duckietown environment.
 \subsection{First try - pathfinding}
+The gym contains a pathfinder file which can be completed with an arbitrary pathfinding algorithm
+to circulate town. \cite{gym_duckietown}
 Our first idea was to find the shortest path between two points on a given map and after
-so a lane following agent could go through that. Hence an A* algorithm was implemented
+so a lane following agent could go through that. Hence an A* algorithm\cite{4082128} was implemented
 to obtain a valid route, but this solution basically does not involve any neural networks, thus
 it is scratched.
 \subsection{Image preprocessing}
@@ -103,7 +105,7 @@ into the convolutional neural network. First of all, we cut and resized the
 pictures to 80x60 pixels, so the unnecessary data won't affect the agent's behaviour.
 \begin{figure}[h]
   \centering
-  \includegraphics[scale=2]{fig2.png}
+  \includegraphics[scale=1.9]{fig2.png}
   \caption{The raw resized image.}
 \end{figure}
 \\
@@ -113,7 +115,7 @@ To make the learning more efficient we have implemented a better segmentation al
 In this case the outer white lines are filtered to the blue channel while the inner dashed
 line is filtered to the red channel. This is managed in a HSV color model since OpenCV
 supported this way better: lower and upper thresholds are given for the white and yellow
-colors. If a pixel is within the pre-specified range then it is filtered to either the
+colors.\cite{CHOW197261,HARALICK1985100} If a pixel is within the pre-specified range then it is filtered to either the
 blue or red channel. A mask is created such way which is merged with the raw picture,
 and after that is normalized. The results can be seen below:
 \begin{figure}[h]
@@ -122,7 +124,8 @@ and after that is normalized. The results can be seen below:
   \caption{The results from segmentation.}
 \end{figure}
 \subsection{The Convolutional Neural Network}
-Since our task is based on visual elements, we have created a 2D Convolutional Network:
+Since our task is based on visual elements, we have created a 2D Convolutional Network.\cite{lecun1995convolutional}
+The network is based of the cited papers.\cite{Kalapos2020,kalapos2021vision,watkins1992q}
 \begin{table}[h]
   
   \label{sample-table}
@@ -148,14 +151,14 @@ Since our task is based on visual elements, we have created a 2D Convolutional N
 \end{table}
 \subsection{Q-learning}
 In every step a screenshot is taken and based on the (1) equation, a value is calculated
-for every possible action - \textit{going straight, turning left, turning right}:
+for every possible action - \textit{going straight, turning left, turning right}:\cite{watkins1992q}
 \begin{equation}
   Q'=Q+\alpha(r+\gamma\cdot \max Q_{est}-Q)
 \end{equation}
 where $Q'$ is the new value, $Q$ is the old value, $\alpha$ is the learning rate (which was chosen as 0.05)
-$r$ is the reward, $\gamma$ is the discount factor (which is 0.95 in our case), 
+$r$ is the reward, $\gamma$ is the discount factor (which is 0.95 in our case)\cite{even2003learning}, 
 $Q_{est}$ is the estimated value to a given action. Using this function the best action
-is chosen based on the reward function.
+is chosen based on the reward function.\cite{kalapos2021vision,Kalapos2020}
 \section{Results}
 Our results didn't happen to be the best solution, however it seems like it is mostly just
 a matter of time to achieve better results. The following graph shows the loss function:
