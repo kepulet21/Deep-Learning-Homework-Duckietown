@@ -13,6 +13,7 @@ import keyboard
 import time
 import tqdm as tqdm
 import matplotlib.pyplot as plt
+import os
 from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
@@ -32,10 +33,6 @@ class DuckietownEnv(Simulator):
         Simulator.__init__(self, **kwargs)
         logger.info("using DuckietownEnv")
         
-        
-        
-        
-        
         self.mon = {'top': 243, 'left': 0, 'width': 640, 'height': 480}
         self.imageBank = []
         self.imageBankLength = 4 
@@ -50,6 +47,7 @@ class DuckietownEnv(Simulator):
         self.zeros3[:,:,2] = 1
         self.images_ = np.empty((60,80,3))
         self.first = True
+        
         
         self.action_space = spaces.Box(low=np.array([-1, -1]), high=np.array([1, 1]), dtype=np.float32)
 
@@ -69,12 +67,8 @@ class DuckietownEnv(Simulator):
         self.limit = limit
 
     def step(self, action):
-        #acts = [[0.33,0],[0.3,1],[0.3,-1],[-0.3,1],[-0.3,-1], [-0.33,0],[0,0]]
-        acts = [[0.33,0],[0.3,1],[0.3,-1]]
+        acts = [[0.33,0],[0.3,2],[0.3,-2]]
         vel, angle = acts[action]
-        #SZija balázs
-        #Már megy a kacsaaaaa!
-        #Mozog a simulatorban! na megvan a hiba most oldom megOkok!
 
         # Distance between the wheels
         baseline = self.unwrapped.wheel_dist
@@ -100,19 +94,15 @@ class DuckietownEnv(Simulator):
 
         vels = np.array([u_l_limited, u_r_limited])
         
-        #state = self._imageBankHandler(images_)
         
+        #get the obsrevation from an image
         obs, reward, done, info = Simulator.step(self, vels)
         img = obs
-        
+        #make preprocessing
         self.images_ = self.prep_image(img)
+        #give it back to the observation and give to the outer code
         obs = self.images_
-        
-       
-        
-                
-        #cv2.imwrite('Screenshot.png',obs[:,:,14])
-        #obs = self.prep_image(img)
+
         mine = {}
         mine["k"] = self.k
         mine["gain"] = self.gain
@@ -121,7 +111,7 @@ class DuckietownEnv(Simulator):
         mine["omega_r"] = omega_r
         mine["omega_l"] = omega_l
         info["DuckietownEnv"] = mine
-        #print(np.shape(obs))
+        
         return obs, reward, done, info
         
     def _done(self,img):
@@ -153,70 +143,42 @@ class DuckietownEnv(Simulator):
     
     
     def prep_image(self,image_):#preprocess one image
-        
-        test = image_
-        
         img_height=60#target height
         img_width=80#target width
-        cv2.imwrite('raw.png',image_)
         image_ = cv2.resize(image_, None,fx=(img_width/image_.shape[1]), fy=(img_height/image_.shape[0]), interpolation = cv2.INTER_CUBIC)#resize to target shape 
         image_ = image_[ 20:60,0:80]#crop image (get processable data)
-        image_ = cv2.resize(image_, None,fx=(1), fy=(30/20), interpolation = cv2.INTER_CUBIC)
+        image_ = cv2.resize(image_, None,fx=(1), fy=(30/20), interpolation = cv2.INTER_CUBIC)#resize the cropped image to target size
         #image_ = cv2.cvtColor(image_, cv2.COLOR_BGR2RGB)#toRGB
-        cv2.imwrite('resized_raw.png',image_)
-        img_red = image_[:,:,0]
-        img_green = image_[:,:,1]
-        img_blue = image_[:,:,2]
+        #cv2.imwrite('resized_raw.png',image_)#TODO: delete this line on release
+        img_red = image_[:,:,0]#separate red channel
+        img_green = image_[:,:,1]#separate green channel
+        img_blue = image_[:,:,2]#separate blue channel
         
-        lower_white = (0,0,70)#lower filter
-        upper_white = (360,20 ,300 )#upper filter
-        
-        #lower_white = (0,0,150)#lower filter
-        #upper_white = (170,20 ,300 )#upper filter
-        hsv_ = cv2.cvtColor(image_, cv2.COLOR_RGB2HSV)#hsv
-        mask_ = cv2.inRange(hsv_, lower_white, upper_white)#mask (one channel)
-        #plt.imshow(mask_)
-        #plt.show()
-        red = cv2.bitwise_and(img_red, img_red, mask = mask_)
-        cv2.imwrite('red.png',red[:,:])
-        #print("Red channel:")
-        #plt.imshow(red)
-        #plt.show()
-
-
+        lower_white = (0,0,50)#lower filter
+        upper_white = (400,40 ,400 )#upper filter
+        hsv_ = cv2.cvtColor(image_, cv2.COLOR_RGB2HSV)#make hsv picture
+        mask_ = cv2.inRange(hsv_, lower_white, upper_white)#get red mask
+        red = cv2.bitwise_and(img_red, img_red, mask = mask_)#mask red cahnnel
 
         lower_orange = (20,70,60)#lower filter
         upper_orange = (30,400 ,400 )#upper filter
-        hsv = cv2.cvtColor(image_, cv2.COLOR_RGB2HSV)#hsv
-        mask = cv2.inRange(hsv, lower_orange, upper_orange)#mask (one channel)
-        #plt.imshow(mask)
-        #plt.show()
-        blue = cv2.bitwise_and(img_blue, img_blue, mask = mask)
-        cv2.imwrite('blue.png',blue[:,:])
-        #print("Blue cahnnel:")
-   
-        #plt.imshow(blue)
-        #plt.show()
-
+        hsv = cv2.cvtColor(image_, cv2.COLOR_RGB2HSV)#make hsv picture
+        mask = cv2.inRange(hsv, lower_orange, upper_orange)#get blue mask	
+        blue = cv2.bitwise_and(img_blue, img_blue, mask = mask)#mask blue channel
 
         lower_def = (0,0,0)#lower filter
         upper_def = (0,0 ,0 )#upper filter
-        hsv__ = cv2.cvtColor(image_, cv2.COLOR_RGB2HSV)#hsv
-        mask__ = cv2.inRange(hsv__, lower_def, upper_def)#mask (one channel)
-        #plt.imshow(mask__)
-        plt.show()
-        green = cv2.bitwise_and(img_green, img_green, mask = mask__)
-        cv2.imwrite('green.png',green[:,:])
-        #print("Green channel:")
-        #plt.show()
-        #plt.imshow(green)
-
-        final = cv2.merge((red, green, blue))
-        #for i in range(3):
-            #final[:,:,i] = final[:,:,i]/255.0 #normalize image pixels
-
-        cv2.imwrite('Screenshot3.png',final)
-        #plt.imshow(final)
+        hsv__ = cv2.cvtColor(image_, cv2.COLOR_RGB2HSV)#mask hsv picture
+        mask__ = cv2.inRange(hsv__, lower_def, upper_def)#get green mask
+        green = cv2.bitwise_and(img_green, img_green, mask = mask__)#mask green channel
+        final = cv2.merge((red, green, blue))#merge the cahnnels to rgb image
+        
+        
+        
+        final = final.astype('float32')#cast pixel values to float
+        #cv2.imwrite('processed.png',final)
+        final /= 255.0#normalize pixel values between 0 and 1
+        
         return final#return preprocessed image
         
 
@@ -224,19 +186,19 @@ class DuckietownEnv(Simulator):
         
         
     def prep_images(self, images_, image_):
-        if np.shape(images_)[2] < 15:
+    #make time series data
+        if np.shape(images_)[2] < 15:#if first image
             x=np.empty((60,80,15))
             for i in range(5):
                 for j in range(3):
-                    x[:,:,i+j] = self.prep_image(image_)[:,:,j]
+                    x[:,:,i+j]= self.prep_image(image_)[:,:,j]
             return x
-        else:
-            #print(np.shape(images_))
+        else:#if not first image
             tmp = images_
             for i in range(15):
                 images_[:,:,i] = tmp[:,:,i]
             for j in range(3):
-                images_[:,:,-3+j] = self.prep_image(image_)[:,:,j]
+                images_[:,:,-3+j]= self.prep_image(image_)[:,:,j]
             return images_
 
     
