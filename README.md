@@ -14,7 +14,7 @@ After so the following command should start the learning:
 - `./q.py`
 
 To watch the predictions the following command should be executed:
-> v./pred.py
+> `./pred.py`
 
 # First milestone:
 As in this project we are utilizing a simulation environment, the following tasks have been done for the first milestone:
