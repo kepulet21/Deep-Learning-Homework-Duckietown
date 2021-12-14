@@ -3,6 +3,7 @@ This is the official repo for our group: "K épület" in the course: "Deep Learn
 - Endrész Balázs (F10RLU)
 - Monori János Bence (PVUZ1Z)
 - Wenesz Dominik (NBMU7U)
+- Presentation video: https://www.youtube.com/watch?v=2ySikVXrpmc&ab_channel=BenceMonori
 
 # First milestone:
 As in this project we are utilizing a simulation environment, the following tasks have been done for the first milestone:
@@ -26,8 +27,4 @@ For learning and predicting the following files shall be used: *q.py* and *pred.
  These tasks mentioned above have been done and have been submitted by December 2nd of 2021.
 
 # Finishing the project
-Many bugfixes have been made with the reward function and the learning rate. The dockumentation is done, but the citations are missing.
-
-TODO: 
-- Make the video
-- Correct the citations
+Many bugfixes have been made with the reward function and the learning rate. The dockumentation is done, the presentation is uploaded.
