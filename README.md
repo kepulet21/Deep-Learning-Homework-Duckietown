@@ -5,6 +5,16 @@ This is the official repo for our group: "K épület" in the course: "Deep Learn
 - Wenesz Dominik (NBMU7U)
 - Presentation video: https://www.youtube.com/watch?v=2ySikVXrpmc&ab_channel=BenceMonori
 
+# How to run the code
+To run the code the official gym-duckietown should be installed first (https://github.com/duckietown/gym-duckietown). After that the following files should be downloaded to the specified folders:
+- *q.py*, *pred.py*, *DT.h5* - in the gym-duckietown folder
+- *duckietown_env.py* - gym-duckietown > src > gym_duckietown > src
+After so the following command should start the learning:
+> `cd gym-duckietown`
+> `./q.py`
+To watch the predictions the following command should be executed:
+> `./pred.py`
+
 # First milestone:
 As in this project we are utilizing a simulation environment, the following tasks have been done for the first milestone:
 - *Initializing the docker environment*: This functions as the base of the headless running of the Duckietown simulation. The task was done by pulling the pre-built docker image after installing nvidia-docker.
