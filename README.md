@@ -15,6 +15,7 @@ After so the following command should start the learning:
 
 To watch the predictions the following command should be executed:
 > `./pred.py`
+Also by downloading the whole kepulet_duckietown_files folder the same files can  be run.
 
 # First milestone:
 As in this project we are utilizing a simulation environment, the following tasks have been done for the first milestone:
